@@ -1,6 +1,6 @@
 {
   "name": "ts-node-api-shell",
-  "debug": "ts-node-api-shell:*",
+  "debug": "api-shell:*",
   "description": "A shell project for common nodejs + typescript standalone back-end applications.",
   "main": "index.js",
   "version": "0.0.0",
