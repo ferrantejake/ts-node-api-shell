@@ -3,7 +3,6 @@ import * as path from 'path';
 import { localconfig } from './utils';
 
 localconfig.setup();
-console.log('process.env.ENVIRONMENT', process.env.ENVIRONMENT);
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
