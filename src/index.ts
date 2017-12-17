@@ -1,14 +1,18 @@
 import * as express from 'express';
 import * as path from 'path';
 import { localconfig } from './utils';
-
 localconfig.setup();
+
+const cors = require('cors');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const routes = require('./routes');
 
 const app = express();
+
+// Enable CORS for all endpoints
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

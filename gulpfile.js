@@ -2,13 +2,16 @@
 
 const gulp =
   require('gulp-help')(require('gulp-param')(require('gulp'), process.argv));
-// const async = require('async');
+const async = require('async');
 const del = require('del');
 const merge = require('merge2');
-// const path = require('path');
+const path = require('path');
+const DependencyResolver = require('dependency-resolver');
 
 // load gulp plugins
 const G$ = require('gulp-load-plugins')({ lazy: true });
+let resolver;
+const exec = require('child_process').exec;
 
 // load settings
 const pkg = require('./package');
@@ -20,6 +23,62 @@ if (!pkg) {
 const settings = require('./gulp.json');
 const tsconfig = require('./tsconfig.json');
 let tsProject = undefined;
+
+function getDependencyList() {
+  const project = 'app';
+  if (resolver === undefined) {
+    resolver = new DependencyResolver();
+    resolver.add(project);
+    (Object.keys(pkg.dependencies) || []).forEach(dep =>
+      resolver.setDependency(project, dep)
+    );
+  }
+  return resolver.resolve(project);
+}
+
+// Run a series of commands.
+function runCommands(commands, callback) {
+  async.eachSeries(commands, function (command, done) {
+    runCommand(command.cmd, { cwd: command.cwd }, done);
+  }, function () {
+    callback();
+  });
+}
+
+// Execute child process commands.
+function runCommand(command, options, callback) {
+  exec(command, options, function (error, stdout, stderr) {
+    console.log(`${path.resolve(options.cwd || '.')} ${command}`);
+    console.log(stdout);
+    console.log(stderr);
+    if (error !== null)
+      console.log('exec error: ', error);
+    callback();
+  });
+}
+
+// DO NOT CHANGE DEFAULT TASK - Azure depends on it
+gulp.task('default', false, defaultTask);
+
+function defaultTask(callback) {
+  G$.sequence('startup', callback);
+}
+
+gulp.task('startup', false, startupTask);
+
+function startupTask(callback) {
+  G$.sequence('build', callback);
+}
+gulp.task('install', 'Install all npm modules', installTask);
+
+// Install project dependencies.
+function installTask(callback) {
+  const deps = getDependencyList();
+  const commands = deps.map(dep => {
+    return { cmd: 'npm install', cwd: `${dep}` }
+  });
+  runCommands(commands, callback);
+}
 
 gulp.task(
   'debug',
