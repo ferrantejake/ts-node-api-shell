@@ -2,11 +2,11 @@
   "name": "ts-node-api-shell",
   "debug": "api-shell:*",
   "description": "A shell project for common nodejs + typescript standalone back-end applications.",
-  "main": "index.js",
+  "main": "lib/server.js",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node index.js",
+    "start": "node lib/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -35,6 +35,7 @@
     "debug": "~2.6.9",
     "del": "^2.2.2",
     "dependency-resolver": "^2.0.1",
+    "dotenv": "^6.0.0",
     "exec": "^0.2.1",
     "express": "~4.15.5",
     "gulp": "^3.9.1",
@@ -51,6 +52,7 @@
     "morgan": "~1.9.0",
     "path": "^0.12.7",
     "serve-favicon": "~2.4.5",
+    "source-map-support": "^0.5.6",
     "tslint": "^5.2.0",
     "typescript": "^2.3.2"
   }

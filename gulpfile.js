@@ -85,8 +85,11 @@ gulp.task(
   'Run the project and auto-restart for changes', function (project, debug) {
     debug = debug || pkg.debug;
     console.log(`>> debug ${pkg.name} with DEBUG=${debug}`);
+
+    require('dotenv').config()
+
     G$.nodemon({
-      script: pkg.main,
+      script: pkg.maint,
       ext: 'js',
       env: { NODE_ENV: 'development', DEBUG: debug },
       delay: 1,  // Sec
